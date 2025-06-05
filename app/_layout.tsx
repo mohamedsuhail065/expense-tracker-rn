@@ -1,29 +1,45 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [time, setTime] = useState("");
+  const updateTime = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const timestring = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    setTime(timestring);
+  };
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+  useEffect(() => {
+    updateTime();
+    const interval = setInterval(() => updateTime(), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack
+      screenOptions={{
+        headerStyle: styles.header, 
+        headerTintColor: "#fff",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+        headerTitle: () => <Text style={{ color: "white" }}>{time}</Text>,
+      }}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: "#008080",
+    elevation: 0,
+    shadowOpacity: 0,
+    shadowColor: "transparent",
+    borderBottomWidth: 0,
+  },
+});
