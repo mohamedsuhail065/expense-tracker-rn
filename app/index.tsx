@@ -13,7 +13,7 @@ export default function Index() {
       year: "numeric",
     });
     setCurrentMont(month);
-  });
+  },[]);
   return (
     <MonthContext.Provider value={currentMonth}>
       <Stack.Navigator

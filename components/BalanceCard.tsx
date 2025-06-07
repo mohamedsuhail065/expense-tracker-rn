@@ -1,11 +1,48 @@
 import MonthContext from "@/context/MonthContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const BalanceCard = () => {
   const month = useContext(MonthContext);
+  const [expense, setExpense] = useState(0);
+  const [transactions, setTransactions] = useState(0);
+  const [data, setData] = useState([
+    {
+      name: "",
+      date: "",
+      amount: 0,
+      type: "",
+      category: "",
+    },
+  ]);
+  useEffect(() => {
+    fetch(
+      "https://raw.githubusercontent.com/mohamedsuhail065/sample-api/main/expenses.json"
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => setData(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    const filtered = data.filter((tx) => {
+      const txMonth = new Date(tx.date).toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
+      return txMonth === month && tx.type === "expense";
+    });
+    const total = filtered.reduce((sum, tx) => sum + tx.amount, 0);
+    setExpense(total);
+    setTransactions(filtered.length);
+  });
   return (
     <>
       <View style={styles.container}>
@@ -30,9 +67,8 @@ const BalanceCard = () => {
             marginBottom: 32,
           }}
         >
-          {" "}
           <Text style={{ fontSize: 30, color: "white", fontWeight: 700 }}>
-            $2580.00
+           {expense}
           </Text>
         </View>
         <View
@@ -60,7 +96,7 @@ const BalanceCard = () => {
               opacity: 0.75,
             }}
           >
-            5 transactions
+            {transactions}
           </Text>
         </View>
       </View>
