@@ -1,9 +1,11 @@
+import MonthContext from "@/context/MonthContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const BalanceCard = () => {
+  const month = useContext(MonthContext);
   return (
     <>
       <View style={styles.container}>
@@ -33,9 +35,33 @@ const BalanceCard = () => {
             $2580.00
           </Text>
         </View>
-        <View style={{display:"flex",justifyContent:"space-between",flexDirection:"row"}}>
-            <Text style={{fontWeight:500,fontSize:16,color:"white", opacity:0.75}}>June 2025</Text>
-           <Text style={{fontWeight:500,fontSize:16,color:"white", opacity:0.75}}>5 transactions</Text>
+        <View
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: 500,
+              fontSize: 16,
+              color: "white",
+              opacity: 0.75,
+            }}
+          >
+            {month}
+          </Text>
+          <Text
+            style={{
+              fontWeight: 500,
+              fontSize: 16,
+              color: "white",
+              opacity: 0.75,
+            }}
+          >
+            5 transactions
+          </Text>
         </View>
       </View>
     </>

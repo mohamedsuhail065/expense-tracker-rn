@@ -6,7 +6,6 @@ export default function RootLayout() {
   const [time, setTime] = useState("");
   const updateTime = () => {
     const now = new Date();
-    const hours = now.getHours();
     const timestring = now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -23,7 +22,7 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        headerStyle: styles.header, 
+        headerStyle: styles.header,
         headerTintColor: "#fff",
         headerTitleStyle: {
           fontWeight: "bold",

@@ -3,10 +3,12 @@ import Header from "@/components/Header";
 import React from "react";
 
 const HomeScreen = () => {
-  return <>
-  <Header/>
-  <BalanceCard/>
-  </>;
+  return (
+    <>
+      <Header />
+      <BalanceCard />
+    </>
+  );
 };
 
 export default HomeScreen;
