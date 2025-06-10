@@ -1,6 +1,7 @@
 import MonthContext from "@/context/MonthContext";
+import { Picker } from "@react-native-picker/picker";
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 const TransactionHistory = () => {
   type Transaction = {
@@ -70,12 +71,11 @@ const TransactionHistory = () => {
             gap: 12,
             marginBottom: 12,
             marginTop: 6,
-        
           }}
         >
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+          <Picker
+            selectedValue={category}
+            onValueChange={(value) => setCategory(value)}
             style={{
               fontSize: 14,
               padding: 4,
@@ -86,12 +86,11 @@ const TransactionHistory = () => {
             }}
           >
             {categories.map((cat, Index) => (
-              <option key={Index} >{cat}</option>
+              <Picker.Item key={Index} label={cat} value={cat} />
             ))}
-          </select>
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+          </Picker>
+          <Picker
+            selectedValue={sortOrder}
             style={{
               fontSize: 14,
               padding: 4,
@@ -100,46 +99,50 @@ const TransactionHistory = () => {
               borderStyle: "solid",
               borderRadius: 4,
             }}
+            onValueChange={(value) => setSortOrder(value)}
           >
-            <option value={"none"}>Sort by Amount</option>
-            <option value={"asc"}>Low to high</option>
-            <option value={"desc"}>High to low  </option>
-          </select>
+            <Picker.Item value="none" label="Sort by Amount" />
+            <Picker.Item value="asc" label="Low to high" />
+            <Picker.Item value="desc" label="High  to low" />
+          </Picker>
         </View>
         <View
           style={{
             display: "flex",
             justifyContent: "space-between",
             marginTop: 8,
-            gap:8,
+            gap: 8,
           }}
         >
-          {filtered.map((t) => (
-            <li
-              key={t.name}
-              style={{ fontSize: 16, paddingBottom: 10, fontWeight: 500 }}
-            >
+          <FlatList
+            data={filtered}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ gap: 20 }}
+            renderItem={({ item }) => (
               <View
                 style={{
+                  paddingBottom: 10,
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
                 }}
               >
-                <View style={{display:"flex",gap:4}}>
-                  <span>{t.name}</span>
-                  <span style={{ fontSize: 14, color: "#6B7280" }}>
-                    {t.date}
-                  </span>
-                </View>
                 <View>
-                  <span style={{ fontSize: 18, color: "#DC2626" ,fontWeight:600}}>
-                    -${t.amount}
-                  </span>
+                  <Text style={{ display: "flex", gap: 4, fontSize: 16 }}>
+                    {item.name}
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "#6B7280" }}>
+                    {item.date}
+                  </Text>
                 </View>
+                <Text
+                  style={{ fontSize: 18, color: "#DC2626", fontWeight: 600 }}
+                >
+                  -${item.amount}
+                </Text>
               </View>
-            </li>
-          ))}
+            )}
+          ></FlatList>
         </View>
       </View>
     </>
