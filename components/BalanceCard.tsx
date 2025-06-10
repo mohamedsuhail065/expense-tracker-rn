@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const BalanceCard = () => {
-  const month = useContext(MonthContext);
+  const { month, setMonth } = useContext(MonthContext);
   const [expense, setExpense] = useState(0);
   const [transactions, setTransactions] = useState(0);
   const [data, setData] = useState([
@@ -17,6 +17,24 @@ const BalanceCard = () => {
       category: "",
     },
   ]);
+
+  const generateLast12Months = () => {
+    const months = [];
+    const now = new Date();
+    for (let i = 0; i < 12; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push(
+        d.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        })
+      );
+    }
+    return months.reverse();
+  };
+
+  const months = generateLast12Months();
+
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/mohamedsuhail065/sample-api/main/expenses.json"
@@ -42,17 +60,32 @@ const BalanceCard = () => {
     const total = filtered.reduce((sum, tx) => sum + tx.amount, 0);
     setExpense(total);
     setTransactions(filtered.length);
-  });
+  }, [month,data]);
+
+  const currentIndex = months.indexOf(month);
+
+  const handlePrevMonth = () => {
+    if (currentIndex > 0) {
+      const prevMonth = months[currentIndex - 1];
+      setMonth(prevMonth);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (currentIndex < months.length - 1) {
+      setMonth(months[currentIndex + 1]);
+    }
+  };
   return (
     <>
       <View style={styles.container}>
         <View style={styles.balancecard}>
           <View style={styles.month}>
             <Text style={styles.monthlytext}>Monthly Expense</Text>
-            <TouchableOpacity style={{ padding: 1 }}>
+            <TouchableOpacity onPress={handlePrevMonth} style={{ padding: 1 }}>
               <Entypo name="chevron-small-up" size={16} color={"white"} />
             </TouchableOpacity>
-            <TouchableOpacity style={{ padding: 1 }}>
+            <TouchableOpacity onPress={handleNextMonth} style={{ padding: 1 }}>
               <Entypo name="chevron-small-down" size={16} color={"white"} />
             </TouchableOpacity>
           </View>
@@ -68,7 +101,7 @@ const BalanceCard = () => {
           }}
         >
           <Text style={{ fontSize: 30, color: "white", fontWeight: 700 }}>
-           {expense}
+            ${expense.toFixed(2)}
           </Text>
         </View>
         <View
@@ -96,7 +129,7 @@ const BalanceCard = () => {
               opacity: 0.75,
             }}
           >
-            {transactions}
+            {transactions} transactions
           </Text>
         </View>
       </View>
@@ -113,7 +146,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     padding: 24,
     marginRight: 20,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   balancecard: {
     display: "flex",

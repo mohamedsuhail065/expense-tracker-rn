@@ -1,21 +1,19 @@
 import MonthContext from "@/context/MonthContext";
 import HomeScreen from "@/screens/HomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Index() {
   const Stack = createNativeStackNavigator();
-  const [currentMonth, setCurrentMont] = useState("");
-
-  useEffect(() => {
-    const month = new Date().toLocaleString("default", {
+  const [month, setMonth] = useState(() => {
+    const now = new Date();
+    return now.toLocaleString("default", {
       month: "long",
       year: "numeric",
     });
-    setCurrentMont(month);
-  },[]);
+  });
   return (
-    <MonthContext.Provider value={currentMonth}>
+    <MonthContext.Provider value={{ month, setMonth }}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
