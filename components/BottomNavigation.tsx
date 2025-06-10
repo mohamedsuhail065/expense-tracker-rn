@@ -9,7 +9,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
 } from "react-native";
 
 type FormData = {
@@ -74,13 +74,12 @@ const BottomNavigation = () => {
     }
   };
 
-  const iconColor = (tab: string) =>
-    tab === activeTab ? "#008080" : "gray";
+  const iconColor = (tab: string) => (tab === activeTab ? "#008080" : "gray");
 
   return (
     <>
       <View style={styles.bottomBar}>
-        <TouchableOpacity onPress={() => handleTabClick("home")} >
+        <TouchableOpacity onPress={() => handleTabClick("home")}>
           <Foundation name="home" color={iconColor("home")} size={30} />
         </TouchableOpacity>
 
@@ -96,59 +95,60 @@ const BottomNavigation = () => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => handleTabClick("wallet")}>
-          <Ionicons name="wallet-outline" size={36} color={iconColor("wallet")} />
+          <Ionicons
+            name="wallet-outline"
+            size={36}
+            color={iconColor("wallet")}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => handleTabClick("profile")}>
-          <Octicons name="person" size={36} color={iconColor("person")} />
+          <Octicons name="person" size={36} color={iconColor("profile")} />
         </TouchableOpacity>
       </View>
 
-      <Modal visible={showForm}  transparent>
+      <Modal visible={showForm} transparent>
         <View style={styles.overlay}>
-         
-            <View style={styles.form}>
-              <Text style={styles.title}>Add Expense</Text>
+          <View style={styles.form}>
+            <Text style={styles.title}>Add Expense</Text>
 
-              {["name", "amount", "date", "category"].map((field) => (
-                <View key={field}>
-                  <TextInput
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                    value={formData[field as keyof FormData]}
-                    onChangeText={(value) =>
-                      handleChange(field as keyof FormData, value)
-                    }
-                    style={styles.input}
-                    
-                  />
-                  {errors[field as keyof Errors] && (
-                    <Text style={styles.errorText}>
-                      {errors[field as keyof Errors]}
-                    </Text>
-                  )}
-                </View>
-              ))}
-
-              <View style={styles.buttonRow}>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => {
-                    setShowForm(false);
-                    setErrors({});
-                    setActiveTab("home");
-                  }}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.submitButton}
-                  onPress={handleSubmit}
-                >
-                  <Text style={{ color: "white" }}>Add</Text>
-                </TouchableOpacity>
+            {["name", "amount", "date", "category"].map((field) => (
+              <View key={field}>
+                <TextInput
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={formData[field as keyof FormData]}
+                  onChangeText={(value) =>
+                    handleChange(field as keyof FormData, value)
+                  }
+                  style={styles.input}
+                />
+                {errors[field as keyof Errors] && (
+                  <Text style={styles.errorText}>
+                    {errors[field as keyof Errors]}
+                  </Text>
+                )}
               </View>
+            ))}
+
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setShowForm(false);
+                  setErrors({});
+                  setActiveTab("home");
+                }}
+              >
+                <Text>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleSubmit}
+              >
+                <Text style={{ color: "white" }}>Add</Text>
+              </TouchableOpacity>
             </View>
-        
+          </View>
         </View>
       </Modal>
     </>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    top:-15,
+    top: -15,
   },
   overlay: {
     flex: 1,
